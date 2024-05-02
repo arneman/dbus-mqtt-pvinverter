@@ -1,14 +1,14 @@
-# dbus-shelly-1pm-pvinverter
-Integrate Shelly 1PM into Victron Energies Venus OS
+# dbus-mqtt-pvinverter
+Integrate Generic mqtt into Victron Energies Venus OS
 
 ## Purpose
-With the scripts in this repo it should be easy possible to install, uninstall, restart a service that connects the Shelly 1PM to the VenusOS and GX devices from Victron.
+With the scripts in this repo it should be easy possible to install, uninstall, restart a service that connects the Generic mqtt to the VenusOS and GX devices from Victron.
 Idea is inspired on @fabian-lauer project linked below.
 
 
 
 ## Inspiration
-This project is my first on GitHub and with the Victron Venus OS, so I took some ideas and approaches from the following projects - many thanks for sharing the knowledge:
+This project is my first on GitHub anPMd with the Victron Venus OS, so I took some ideas and approaches from the following projects - many thanks for sharing the knowledge:
 - https://github.com/fabian-lauer/dbus-shelly-3em-smartmeter
 - https://shelly-api-docs.shelly.cloud/gen1/#shelly1-shelly1pm
 - https://github.com/victronenergy/venus/wiki/dbus#pv-inverters
@@ -16,10 +16,10 @@ This project is my first on GitHub and with the Victron Venus OS, so I took some
 ## How it works
 ### My setup
 - 3-Phase installation
-- Shelly 1PM with latest firmware (20220209-094317/v1.11.8-g8c7bb8d)
+- Generic mqtt with latest firmware (20220209-094317/v1.11.8-g8c7bb8d)
   - Measuring AC output of SUN-2000 GTIL on phase L3
   - Connected to Wifi netowrk "A" with a known IP  
-- Shelly 1PM with latest firmware (20220209-094317/v1.11.8-g8c7bb8d)
+- Generic mqtt with latest firmware (20220209-094317/v1.11.8-g8c7bb8d)
   - Measuring AC output of Envertech EVT-500 and Hoymiles HM-800 on phase L3
   - Connected to Wifi netowrk "A" with a known IP  
 - Shelly 3EM used as a grid meter
@@ -34,11 +34,11 @@ As mentioned above the script is inspired by @fabian-lauer dbus-shelly-3em-smart
 So what is the script doing:
 - Running as a service
 - connecting to DBus of the Venus OS `com.victronenergy.pvinverter.http_{DeviceInstanceID_from_config}`
-- After successful DBus connection Shelly 1PM is accessed via REST-API - simply the /status is called and a JSON is returned with all details
-  A sample JSON file from Shelly 1PM can be found [here](docs/shelly1pm-status-sample.json)
+- After successful DBus connection Generic mqtt is accessed via REST-API - simply the /status is called and a JSON is returned with all details
+  A sample JSON file from Generic mqtt can be found [here](docs/shelly1pm-status-sample.json)
 - Serial/MAC is taken from the response as device serial
 - Paths are added to the DBus with default value 0 - including some settings like name, etc
-- After that a "loop" is started which pulls Shelly 1PM data every 750ms from the REST-API and updates the values in the DBus
+- After that a "loop" is started which pulls Generic mqtt data every 750ms from the REST-API and updates the values in the DBus
 
 Thats it 😄
 
@@ -51,28 +51,28 @@ Thats it 😄
 
 ## Install & Configuration
 ### Get the code
-Just grap a copy of the main branche and copy them to a folder under `/data/` e.g. `/data/dbus-shelly-1pm-pvinverter`.
+Just grap a copy of the main branche and copy them to a folder under `/data/` e.g. `/data/dbus-mqtt-pvinverter`.
 After that call the install.sh script.
 
 The following script should do everything for you:
 ```
-wget https://github.com/vikt0rm/dbus-shelly-1pm-pvinverter/archive/refs/heads/main.zip
-unzip main.zip "dbus-shelly-1pm-pvinverter-main/*" -d /data
-mv /data/dbus-shelly-1pm-pvinverter-main /data/dbus-shelly-1pm-pvinverter
-chmod a+x /data/dbus-shelly-1pm-pvinverter/install.sh
-/data/dbus-shelly-1pm-pvinverter/install.sh
+wget https://github.com/vikt0rm/dbus-mqtt-pvinverter/archive/refs/heads/main.zip
+unzip main.zip "dbus-mqtt-pvinverter-main/*" -d /data
+mv /data/dbus-mqtt-pvinverter-main /data/dbus-mqtt-pvinverter
+chmod a+x /data/dbus-mqtt-pvinverter/install.sh
+/data/dbus-mqtt-pvinverter/install.sh
 rm main.zip
 ```
 ⚠️ Check configuration after that - because service is already installed an running and with wrong connection data (host, username, pwd) you will spam the log-file
 
 ### Change config.ini
-Within the project there is a file `/data/dbus-shelly-1pm-pvinverter/config.ini` - just change the values - most important is the deviceinstance, custom name and phase under "DEFAULT" and host, username and password in section "ONPREMISE". More details below:
+Within the project there is a file `/data/dbus-mqtt-pvinverter/config.ini` - just change the values - most important is the deviceinstance, custom name and phase under "DEFAULT" and host, username and password in section "ONPREMISE". More details below:
 
 | Section  | Config vlaue | Explanation |
 | ------------- | ------------- | ------------- |
 | DEFAULT  | AccessType | Fixed value 'OnPremise' |
 | DEFAULT  | SignOfLifeLog  | Time in minutes how often a status is added to the log-file `current.log` with log-level INFO |
-| DEFAULT  | Deviceinstance | Unique ID identifying the shelly 1pm in Venus OS |
+| DEFAULT  | Deviceinstance | Unique ID identifying the Generic mqtt in Venus OS |
 | DEFAULT  | CustomName | Name shown in Remote Console (e.g. name of pv inverter) |
 | DEFAULT  | Phase | Valid values L1, L2 or L3: represents the phase where pv inverter is feeding in |
 | DEFAULT  | Position | Valid values 0, 1 or 2: represents where the inverter is connected (0=AC input 1; 1=AC output; 2=AC input 2) |
@@ -90,4 +90,4 @@ Within the project there is a file `/data/dbus-shelly-1pm-pvinverter/config.ini`
 
 ## Discussions on the web
 This module/repository has been posted on the following threads:
-- https://community.victronenergy.com/questions/127339/shelly-1pm-as-pv-inverter-in-venusos.html
+- https://community.victronenergy.com/questions/127339/mqtt-as-pv-inverter-in-venusos.html
